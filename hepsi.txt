@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Online Mağaza</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+    }
+    header {
+      background-color: #111;
+      padding: 1em;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1em;
+    }
+    header img {
+      height: 40px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+    nav {
+      background-color: #1a1a1a;
+      padding: 1em;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      margin: 0.5em 1em;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #00ffff;
+    }
+    main {
+      padding: 2em;
+    }
+    section {
+      margin-bottom: 2em;
+    }
+    .product {
+      border: 1px solid #555;
+      padding: 1em;
+      margin-bottom: 1em;
+      background-color: #111;
+    }
+    .product img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 0.5em;
+    }
+    input, textarea, button {
+      background-color: #000;
+      color: #fff;
+      border: 1px solid #555;
+      padding: 0.5em;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    .cart {
+      border: 1px solid #555;
+      background-color: #111;
+      padding: 1em;
+      margin-top: 2em;
+    }
+    .cart a {
+      color: #ccc;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 1em;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5em;
+      flex-wrap: wrap;
+    }
+    .remove-btn {
+      background-color: #900;
+      color: #fff;
+      border: none;
+      padding: 0.3em 0.5em;
+      cursor: pointer;
+    }
+    .remove-btn:hover {
+      background-color: #c00;
+    }
+    .search-box {
+      margin-bottom: 1em;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 0.5em;
+      font-size: 1em;
+    }
+    footer {
+      background-color: #111;
+      text-align: center;
+      padding: 1em;
+      font-size: 0.9em;
+    }
+
+    /* Mobil uyum için */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+      }
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+      nav a {
+        margin: 0.5em 0;
+      }
+      main {
+        padding: 1em;
+      }
+      .product {
+        font-size: 0.95em;
+      }
+      input, textarea, button {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+  </style>
+  <script>
+    let cart = [];
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      updateCart();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartContainer = document.getElementById("cart-items");
+      cartContainer.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = \`\${item.name} - ₺\${item.price.toFixed(2)} <button class='remove-btn' onclick='removeFromCart(\${index})'>Kaldır</button>\`;
+        cartContainer.appendChild(div);
+        total += item.price;
+      });
+      document.getElementById("total").textContent = \`Toplam: ₺\${total.toFixed(2)}\`;
+    }
+
+    function filterProducts() {
+      const input = document.getElementById("productSearch").value.toLowerCase();
+      const products = document.getElementsByClassName("product");
+      Array.from(products).forEach(product => {
+        const name = product.getElementsByTagName("h3")[0].textContent.toLowerCase();
+        const description = product.getElementsByTagName("p")[0].textContent.toLowerCase();
+        if (name.includes(input) || description.includes(input)) {
+          product.style.display = "block";
+        } else {
+          product.style.display = "none";
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <img src="https://via.placeholder.com/40x40?text=🛍️" alt="Logo">
+    <h1>Demo Online Mağaza</h1>
+  </header>
+
+  <nav>
+    <a href="#ana">Ana Sayfa</a>
+    <a href="#hakkimizda">Hakkımızda</a>
+    <a href="#urunler">Ürünler</a>
+    <a href="#blog">Blog</a>
+    <a href="#iletisim">İletişim</a>
+  </nav>
+
+  <main>
+    <section id="ana">
+      <h2>Ana Sayfa</h2>
+      <p>Hoş geldiniz! En iyi ürünleri en uygun fiyatlarla sizlere sunuyoruz.</p>
+    </section>
+
+    <section id="hakkimizda">
+      <h2>Hakkımızda</h2>
+      <p>Demo Online Mağaza olarak 2015 yılından beri hizmet vermekteyiz. Misyonumuz kaliteli ürünleri müşterilerimize ulaştırmak.</p>
+    </section>
+
+    <section id="urunler">
+      <h2>Ürünler</h2>
+      <div class="search-box">
+        <input type="text" id="productSearch" placeholder="Ürün ara..." onkeyup="filterProducts()">
+      </div>
+      <div class="product">
+        <img src="https://via.placeholder.com/150?text=Ürün+1" alt="Ürün 1">
+        <h3>Ürün 1</h3>
+        <p>Bu ürün harika bir seçenektir.</p>
+        <strong>₺199.99</strong><br>
+        <button onclick="addToCart('Ürün 1', 199.99)">Sepete Ekle</button>
+      </div>
+      <div class="product">
+        <img src="https://via.placeholder.com/150?text=Ürün+2" alt="Ürün 2">
+        <h3>Ürün 2</h3>
+        <p>Bu ürün yüksek kaliteye sahiptir.</p>
+        <strong>₺299.99</strong><br>
+        <button onclick="addToCart('Ürün 2', 299.99)">Sepete Ekle</button>
+      </div>
+
+      <div class="cart">
+        <h3>Sepet</h3>
+        <div id="cart-items"></div>
+        <p id="total">Toplam: ₺0.00</p>
+        <a href="odeme.html">➤ Ödemeye Git</a>
+      </div>
+    </section>
+
+    <section id="blog">
+      <h2>Blog</h2>
+      <p>Mağazamıza dair güncellemeleri ve ipuçlarını buradan takip edebilirsiniz.</p>
+    </section>
+
+    <section id="iletisim">
+      <h2>İletişim</h2>
+      <p>Bizimle iletişime geçmek için aşağıdaki formu doldurabilirsiniz.</p>
+      <form>
+        <label>Adınız:<br><input type="text" name="ad" required></label><br><br>
+        <label>E-posta:<br><input type="email" name="email" required></label><br><br>
+        <label>Mesajınız:<br><textarea name="mesaj" rows="4" required></textarea></label><br><br>
+        <button type="submit">Gönder</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2015 Demo Online Mağaza. Tüm hakları saklıdır.</p>
+  </footer>
+</body>
+</html>
